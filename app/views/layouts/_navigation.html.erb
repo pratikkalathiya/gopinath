@@ -1,0 +1,32 @@
+<div class="container">
+    <div class="navbar-header"> <%= link_to "Gopinath Enterprise", root_path, :class => 'brand' %></div>
+    <div class="navbar-collapse collapse">
+        <ul class="nav navbar-nav">
+          <% if model_signed_in? %>
+              <li class="<%= 'active' if params[:controller]=='home'%>"><%= link_to 'Home', root_path %></li>
+              <li class="<%= 'active' if params[:controller]=='customers'%>"><%= link_to 'Customer', customers_path %></li>
+              <li class="<%= 'active' if params[:controller]=='companies'%>"><%= link_to 'Company', companies_path %></li>
+              <li class="<%= 'active' if params[:controller]=='products'%>"><%= link_to 'Product', products_path %></li>
+              <li class="<%= 'active' if params[:controller]=='stocks'%>"><%= link_to 'Stock', stocks_path %></li>
+              <li class="<%= 'active' if params[:controller]=='sales_orders' || params[:controller]=='sales_order_details'%>"><%= link_to 'Sales Order', sales_orders_path %></li>
+              <li class="<%= 'active' if params[:controller]=='product_types'%>"><%= link_to 'Product Type', product_types_path %></li>
+              <li class="<%= 'active' if params[:controller]=='devise/registrations'%>">
+                <%= link_to 'Change Password', edit_model_registration_path %>
+              </li>
+              <li>
+                <%= link_to 'Logout', destroy_model_session_path, :method=>'delete' %>
+              </li>
+          <% else %>
+              <li class="<%= 'active' if params[:controller]=='devise/sessions'%>">
+                <%= link_to 'Login', new_model_session_path %>
+              </li>
+              <li class="<%= 'active' if params[:controller]=='devise/registrations'%>">
+                <%= link_to 'Sign up', new_model_registration_path %>
+              </li>
+              <li class="<%= 'active' if params[:controller]=='devise/passwords'%>">
+                <%= link_to 'Forgot Password?', new_model_password_path %>
+              </li>
+          <% end %>
+        </ul>
+    </div>
+</div>

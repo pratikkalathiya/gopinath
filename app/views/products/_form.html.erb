@@ -1,0 +1,42 @@
+<div class="row">
+  <div class="col-sm-3"></div>
+  <div class="col-sm-6">
+    <div class="panel panel-success">
+      <div class="panel-heading">
+        <h3 class="panel-title"><%= params[:action].camelize %> Product</h3>
+      </div>
+      <div class="panel-body">
+        <%= form_for(@product) do |f| %>
+            <% if @product.errors.any? %>
+                <div id="error_explanation">
+                  <h2><%= pluralize(@product.errors.count, "error") %> prohibited this product from being saved:</h2>
+
+                  <ul>
+                    <% @product.errors.full_messages.each do |message| %>
+                        <li><%= message %></li>
+                    <% end %>
+                  </ul>
+                </div>
+            <% end %>
+            <div class="field">
+              <%= f.label :company_name %>
+              <%= f.select :company_id, Company.all.map { |c| [c.company_name, c.id] }  %>
+            </div>
+            <div class="field">
+              <%= f.label :producy_type %>
+              <%= f.select :product_type_id, ProductType.all.map { |c| [c.name, c.id] }   %>
+            </div>
+            <div class="field">
+              <%= f.label :box_code %>
+              <%= f.text_field :box_code %>
+            </div>
+            <br/>
+            <div class="actions">
+              <%= f.submit :class=>"btn btn-info"%>
+            </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-3"></div>
+</div>

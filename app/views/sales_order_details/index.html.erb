@@ -1,0 +1,31 @@
+<h1>Listing sales_order_details</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Sales order</th>
+      <th>Stock</th>
+      <th>Quantity</th>
+      <th>Amount</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @sales_order_details.each do |sales_order_detail| %>
+      <tr>
+        <td><%= sales_order_detail.sales_order_id %></td>
+        <td><%= sales_order_detail.stock_id %></td>
+        <td><%= sales_order_detail.quantity %></td>
+        <td><%= sales_order_detail.amount %></td>
+        <td><%= link_to 'Show', sales_order_detail %></td>
+        <td><%= link_to 'Edit', edit_sales_order_detail_path(sales_order_detail) %></td>
+        <td><%= link_to 'Destroy', sales_order_detail, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Sales order detail', new_sales_order_detail_path %>

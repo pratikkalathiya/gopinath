@@ -1,0 +1,30 @@
+<div class="row">
+  <div class="col-sm-4"></div>
+  <div class="col-sm-4">
+    <div class="panel panel-success">
+      <div class="panel-heading">
+        <h3 class="panel-title">Sign Up</h3>
+      </div>
+      <div class="panel-body text-center">
+        <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+        <%= devise_error_messages! %>
+
+        <div><%= f.label :email %>
+          <%= f.email_field :email, autofocus: true %>
+        </div>
+
+        <div><%= f.label :password %>
+          <%= f.password_field :password, autocomplete: "off" %>
+        </div>
+
+        <div><%= f.label :password_confirmation %>
+          <%= f.password_field :password_confirmation, autocomplete: "off" %>
+        </div>
+        <br/>
+        <div><%= f.submit "Sign up",:class=>"btn btn-info"  %></div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-4"></div>
+</div>

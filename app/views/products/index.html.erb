@@ -1,0 +1,35 @@
+<div class="row">
+  <div class="col-sm-8 col-sm-offset-2">
+    <div class="panel panel-info">
+      <div class="panel-heading">
+        <h3 class="panel-title">Products Details</h3>
+      </div>
+      <div class="panel-body">
+        <div class="text-right"><%= link_to 'New Product', new_product_path,:class=>"btn btn-info" %></div>
+        <br/>
+        <table class="table table-responsive">
+          <thead>
+          <tr>
+            <th>Company Name</th>
+            <th>Product Type</th>
+            <th>Box code</th>
+            <th colspan="2"></th>
+          </tr>
+          </thead>
+
+          <tbody>
+          <% @products.each do |product| %>
+              <tr>
+                <td><%= product.company.company_name %></td>
+                <td><%= get_product_type_name(product.product_type_id).name %></td>
+                <td><%= product.box_code %></td>
+                <td width="7%"><%= link_to 'Show', product %></td>
+                <td width="6%"><%= link_to 'Edit', edit_product_path(product) %></td>
+              </tr>
+          <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

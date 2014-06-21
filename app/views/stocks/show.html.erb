@@ -1,0 +1,45 @@
+<div class="row">
+  <div class="col-sm-6 col-sm-offset-3">
+    <div class="panel panel-info">
+      <div class="panel-heading">
+        <h3 class="panel-title">Customer Detail</h3>
+      </div>
+      <div class="panel-body">
+        <div class="text-right"> <%= link_to 'Edit', edit_stock_path(@stock),:class=>"btn btn-info"   %> |
+          <%= link_to 'Back', stocks_path,:class=>"btn btn-info"   %></div>
+        <br/>
+        <p id="notice"><%= notice %></p>
+        <table class="table table-responsive">
+        <tr>
+          <td>Company Name</td>
+          <td><%= @stock.company.company_name %></td>
+        </tr>
+          <tr>
+            <td>Product type</td>
+            <td><%= get_product_type_name(@stock.product_type_id).name %></td>
+          </tr>
+          <tr>
+            <td>Box Code</td>
+            <td> <%= @stock.product.box_code %></td>
+          </tr>
+          <tr>
+            <td>Batch no</td>
+            <td><%= @stock.batch_no %></td>
+          </tr>
+          <tr>
+            <td>Quantity</td>
+            <td><%= @stock.quantity %></td>
+          </tr>
+          <tr>
+            <td>Purchase price</td>
+            <td><%= @stock.purchase_price %></td>
+          </tr>
+          <tr>
+            <td>Sales price</td>
+            <td><%= @stock.sales_price %></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

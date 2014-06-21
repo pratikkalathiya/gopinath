@@ -1,0 +1,199 @@
+<div class="row">
+  <div class="col-sm-6">
+    <div class="panel panel-success">
+      <div class="panel-heading">
+        <h3 class="panel-title"><%= params[:action].camelize %> Sales Order Details</h3>
+      </div>
+      <div class="panel-body">
+              <%if SalesOrder.find(params[:id]).sales_order_details.count >= 1 %>
+                <a href="/close/<%= params[:id]%>" class="btn btn-info pull-right" >Close</a>
+              <%end%>
+              <%= form_for(@sales_order_detail) do |f| %>
+            <% if @sales_order_detail.errors.any? %>
+                <div id="error_explanation">
+                  <h2><%= pluralize(@sales_order_detail.errors.count, "error") %> prohibited this stock from being saved:</h2>
+
+                  <ul>
+                    <% @sales_order_detail.errors.full_messages.each do |message| %>
+                        <li><%= message %></li>
+                    <% end %>
+                  </ul>
+                </div>
+            <% end %>
+            <%= fields_for(@stock, @sales_order_detail) do |u| %>
+
+                  <div class="field ">
+                    <%= u.label :company_name %>
+                    <%= u.select :company_id, Company.all.map { |c| [c.company_name, c.id] }  %>
+                  </div>
+                  <div class="field ">
+                    <%= u.label :product_type_id %>
+                    <%= u.select :product_type_id, ProductType.all.map { |c| [c.name, c.id] }   %>
+                  </div>
+                  <div class="field ">
+                    <%= u.label :box_code %>
+                    <%= u.select :product_id, Product.all.map { |c| [c.box_code, c.id] }  %>
+                  </div>
+
+                  <div class="field ">
+                    <%= u.label :batch_no %>
+                    <%= u.select :id, Stock.all.map { |c| [c.batch_no, c.id] }   %>
+                  </div>
+
+                  <div class="field" >
+                    <%= u.label :sales_price %>
+                    <%= u.number_field :sales_price,:readonly=>true %>
+                  </div>
+            <%end%>
+
+            <div class="field ">
+              <%= f.label :Quantity %>
+              <%= f.number_field :quantity %>
+            </div>
+            <div class="field ">
+              <%= f.label :amount %>
+              <%= f.number_field :amount,:readonly=>true %>
+            </div>
+            <input type="hidden" id="sales_order_detail_sales_order_id" name="sales_order_detail[sales_order_id]" value="<%=params[:id]%>" />
+            <div class="actions ">
+              <%= f.submit "Save & Continue" ,:class=>"btn btn-info" %>
+              <%= f.submit "Save" ,:class=>"btn btn-info" %>
+
+            </div>
+
+        <% end %>
+        </div>
+      </div>
+    </div>
+  <div class="col-sm-6">
+    <div class="panel panel-success">
+      <div class="panel-heading">
+        <h3 class="panel-title">All Items Related To This Order
+        <span class="pull-right"><b>Total Rs : <%=@sales_order.sales_order_details.sum(:amount)%></b></span>
+        </h3>
+      </div>
+      <div class="panel-body">
+        <table class="table table-responsive">
+          <thead>
+          <tr>
+            <th>Company Name</th>
+            <th>Product type</th>
+            <th>Box Code</th>
+            <th>Batch no</th>
+            <th>Sales Price</th>
+            <th>Quantity</th>
+            <th>Amount</th>
+            <th></th>
+          </tr>
+          </thead>
+          <tbody>
+          <%@sales_order.sales_order_details.each do |sales_order_detail|%>
+              <tr>
+                <td><%=sales_order_detail.stock.company.company_name%></td>
+                <td><%=get_product_type_name(sales_order_detail.stock.product_type_id).name%></td>
+                <td><%=sales_order_detail.stock.product.box_code%></td>
+                <td><%=sales_order_detail.stock.batch_no%></td>
+                <td><%=sales_order_detail.stock.sales_price%></td>
+                <td><%=sales_order_detail.quantity%></td>
+                <td><%=sales_order_detail.amount%></td>
+                <td><%= link_to 'Destroy', sales_order_detail, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+              </tr>
+          <%end%>
+          </tbody>
+        </table>
+      </div>
+  </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var sales_order_details=[];
+    var max_quantity=0;
+    $('#stock_product_id').attr('disabled',true);
+    $('#stock_product_type_id').change(function(){
+        ajax_call_to_get_box_code();
+    });
+
+    $('#sales_order_detail_add_item_id').click(function(){
+        sales_order_details.push({stock_id: $('#stock_id').val(),quantity: $('#sales_order_detail_quantity').val(),amount: $('#sales_order_detail_amount').val()});
+    });
+
+    $('#stock_company_id').change(function(){
+        ajax_call_to_get_box_code();
+    });
+    $('#stock_product_id').change(function(){
+        get_batch_no();
+    });
+    $('#stock_id').change(function(){
+        get_sales_price();
+    });
+    $('#sales_order_detail_quantity').keyup(function(){
+        if(parseInt($('#sales_order_detail_quantity').val())>max_quantity){
+            alert('Maximum quantity of this product is : '+max_quantity);
+            $('#sales_order_detail_quantity').val(max_quantity);
+        }
+        var quantity=$('#sales_order_detail_quantity').val();
+        var price=$('#stock_sales_price').val();
+        $('#sales_order_detail_amount').val((parseInt(quantity)*parseInt(price)));
+
+    });
+
+    function get_sales_price(){
+        jQuery.ajax({
+            url: "/stock/get_sales_price/",
+            data:{stock_id: $('#stock_id').val()},
+            dataType: "json"
+        }).done(function(data) {
+                    var options='';
+                    if(data.sales_price==""){
+                        $('#stock_sales_price').val(0);
+                        max_quantity=0;
+                    }else{
+                        $('#stock_sales_price').val(data.sales_price);
+                        max_quantity=data.quantity;
+                    }
+                });
+    }
+
+    function get_batch_no(){
+        jQuery.ajax({
+            url: "/stock/get_batch_no/",
+            data:{company_id: $('#stock_company_id').val(),product_type_id: $('#stock_product_type_id').val(),product_id: $('#stock_product_id').val()},
+            dataType: "json"
+        }).done(function(data) {
+                    var options='';
+                    $.each( data, function( key, value ) {
+                        options=options+'<option value="'+value.id+'">'+value.batch_no+'</option>';
+                    });
+                    if(options==''){
+                        options='<option value="Select Batch No">Select Batch No</option>';
+                        $('#stock_sales_price').val(0);
+                    }else{
+                        $('#stock_id').html(options);
+                        get_sales_price();
+                    }
+                    $('#stock_id').html(options);
+                    $('#stock_id').attr('disabled',false);
+                });
+    }
+
+    function ajax_call_to_get_box_code(){
+        jQuery.ajax({
+            url: "/product/get_box_code/",
+            data:{company_id: $('#stock_company_id').val(),product_type_id: $('#stock_product_type_id').val()},
+            dataType: "json"
+        }).done(function(data) {
+                    var options='';
+                    $.each( data, function( key, value ) {
+                        options=options+'<option value="'+value.id+'">'+value.box_code+'</option>';
+                    });
+                    if(options==''){
+                        options='<option value="Select Box Code">Select Box Code</option>';
+                    }else{
+                        $('#stock_product_id').html(options);
+                        get_batch_no();
+                    }
+                    $('#stock_product_id').html(options);
+                    $('#stock_product_id').attr('disabled',false);
+                });
+    }
+</script>

@@ -1,0 +1,41 @@
+<div class="row">
+  <div class="col-sm-6 col-sm-offset-3">
+    <div class="panel panel-info">
+      <div class="panel-heading">
+        <h3 class="panel-title">Customer Detail</h3>
+      </div>
+      <div class="panel-body">
+        <div class="text-right"> <%= link_to 'Edit', edit_customer_path(@customer),:class=>"btn btn-info"  %> |
+          <%= link_to 'Back', customers_path,:class=>"btn btn-info" %></div>
+        <br/>
+        <p id="notice"><%= notice %></p>
+        <table class="table table-responsive">
+          <tr>
+            <td>Email</td>
+            <td><%= @customer.email_id %></td>
+          </tr>
+        <tr>
+          <td>First name</td>
+          <td><%= @customer.first_name %></td>
+        </tr>
+        <tr>
+          <td>Last name</td>
+          <td><%= @customer.last_name %></td>
+        </tr>
+        <tr>
+          <td>Address</td>
+          <td><%= @customer.address %></td>
+        </tr>
+        <tr>
+          <td>Birth date</td>
+          <td><%= @customer.birth_date %></td>
+        </tr>
+        <tr>
+          <td>Mobile no</td>
+          <td><%= @customer.mobile_no %></td>
+        </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
